@@ -18,6 +18,7 @@ public class Human : MonoBehaviour
     public int NeedHunger = 66;
     public int NeedSleep = 90;
     public string Doing = "Wandering around...";
+    public bool isEating = false;
 
     void Start()
     {
@@ -36,13 +37,17 @@ public class Human : MonoBehaviour
     {
         string formattedText = System.String.Format("Hunger: {0}\nSleep: {1}\n{2}", NeedHunger, NeedSleep, Doing);
         Stats.text = formattedText;
-        if (NeedHunger > 50)
+        if (NeedHunger > 50 && !isEating)
         {
             rb.AddForce(movement * speed);
         } else
         {
             Transform closest = GetClosestObject(fruitsPos);
             rb.transform.position = Vector2.MoveTowards(rb.transform.position, closest.position, 3.0f * Time.deltaTime);
+            if (closest.position == rb.transform.position)
+            {
+                isEating = true;
+            }
         }
 
     }
@@ -50,7 +55,7 @@ public class Human : MonoBehaviour
     // Human custom classes
     void DecreaseNeeds()
     {
-        NeedHunger -= 3;
+        if (!isEating) NeedHunger -= 3;
         NeedSleep -= 2;
     }
 
@@ -58,15 +63,27 @@ public class Human : MonoBehaviour
     {
         // try to find food and stuff if too low
         // else random movement
-        if (NeedHunger <= 50)
+        if (NeedHunger <= 50 && !isEating)
         {
-            Doing = "Looking for food.";
-        } else
+            Doing = "Looking for food...";
+        } else if (isEating)
+        {
+            Doing = "Eating some vegetables.";
+            EatFood();
+        }
+        else
         {
             movement = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
             movement = movement.normalized * speed * Time.deltaTime;
             Doing = "Wandering around...";
         }
+    }
+
+    void EatFood()
+    {
+        // veggies for now but should probably add other stuff
+        if (NeedHunger < 100) NeedHunger = NeedHunger + 30 <= 100 ? NeedHunger + 30 : 100;
+        else isEating = false;
     }
 
     Transform GetClosestObject(Transform[] obj)
