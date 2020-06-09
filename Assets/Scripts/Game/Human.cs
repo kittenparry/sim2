@@ -15,13 +15,15 @@ public class Human : MonoBehaviour
     public string gender = "Male";
     public int age = 23;
 
-    public int needHunger = 57;
-    public int needSleep = 90;
+    public int needHunger;
+    public int needSleep;
     public string charStatus = "Wandering around...";
     public bool isEating = false;
 
     void Start()
     {
+        needHunger = Random.Range(54, 98);
+        needSleep = Random.Range(77, 98);
         textStatus = GameObject.Find("HumanStats").GetComponent<Text>();
         InvokeRepeating("DecreaseNeeds", 2.5f, 2.5f);
         InvokeRepeating("CheckNeeds", 0f, 2.5f);
