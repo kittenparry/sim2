@@ -2655,13 +2655,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 100
   rb: {fileID: 1703528293}
-  Name: John
-  LastName: Doe
-  Gender: Male
-  Age: 23
-  NeedHunger: 57
-  NeedSleep: 90
-  Doing: Wandering around...
+  name: John
+  lastName: Doe
+  gender: Male
+  age: 23
+  needHunger: 57
+  needSleep: 90
+  charStatus: Wandering around...
+  isEating: 0
 --- !u!61 &1703528295
 BoxCollider2D:
   m_ObjectHideFlags: 0

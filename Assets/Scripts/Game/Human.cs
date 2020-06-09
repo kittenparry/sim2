@@ -3,26 +3,26 @@ using UnityEngine.UI;
 
 public class Human : MonoBehaviour
 {
-    Text Stats;
+    Text textStatus;
     public float speed = 100;
     private Vector2 movement;
     public Rigidbody2D rb;
     GameObject[] fruits = null;
     Transform[] fruitsPos = new Transform[4];
 
-    public string Name = "John";
-    public string LastName = "Doe";
-    public string Gender = "Male";
-    public int Age = 23;
+    public string name = "John";
+    public string lastName = "Doe";
+    public string gender = "Male";
+    public int age = 23;
 
-    public int NeedHunger = 66;
-    public int NeedSleep = 90;
-    public string Doing = "Wandering around...";
+    public int needHunger = 57;
+    public int needSleep = 90;
+    public string charStatus = "Wandering around...";
     public bool isEating = false;
 
     void Start()
     {
-        Stats = GameObject.Find("HumanStats").GetComponent<Text>();
+        textStatus = GameObject.Find("HumanStats").GetComponent<Text>();
         InvokeRepeating("DecreaseNeeds", 2.5f, 2.5f);
         InvokeRepeating("CheckNeeds", 0f, 2.5f);
 
@@ -35,9 +35,9 @@ public class Human : MonoBehaviour
 
     void FixedUpdate()
     {
-        string formattedText = System.String.Format("Hunger: {0}\nSleep: {1}\n{2}", NeedHunger, NeedSleep, Doing);
-        Stats.text = formattedText;
-        if (NeedHunger > 50 && !isEating)
+        string formattedText = System.String.Format("Hunger: {0}\nSleep: {1}\n{2}", needHunger, needSleep, charStatus);
+        textStatus.text = formattedText;
+        if (needHunger > 50 && !isEating)
         {
             rb.AddForce(movement * speed);
         } else
@@ -55,35 +55,38 @@ public class Human : MonoBehaviour
     // Human custom classes
     void DecreaseNeeds()
     {
-        if (!isEating) NeedHunger -= 3;
-        NeedSleep -= 2;
+        if (!isEating) needHunger -= 3;
+        needSleep -= 2;
     }
 
     void CheckNeeds()
     {
         // try to find food and stuff if too low
         // else random movement
-        if (NeedHunger <= 50 && !isEating)
+        if (needHunger <= 50 && !isEating)
         {
-            Doing = "Looking for food...";
+            charStatus = "Looking for food...";
         } else if (isEating)
         {
-            Doing = "Eating some vegetables.";
+            charStatus = "Eating some vegetables.";
             EatFood();
         }
         else
         {
             movement = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
             movement = movement.normalized * speed * Time.deltaTime;
-            Doing = "Wandering around...";
+            charStatus = "Wandering around...";
         }
     }
 
     void EatFood()
     {
         // veggies for now but should probably add other stuff
-        if (NeedHunger < 100) NeedHunger = NeedHunger + 30 <= 100 ? NeedHunger + 30 : 100;
-        else isEating = false;
+        if (needHunger < 100) needHunger = needHunger + 30 <= 100 ? needHunger + 30 : 100;
+        else {
+            isEating = false;
+            charStatus = "Wandering around...";
+        };
     }
 
     Transform GetClosestObject(Transform[] obj)
