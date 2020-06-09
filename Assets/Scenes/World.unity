@@ -2659,7 +2659,7 @@ MonoBehaviour:
   LastName: Doe
   Gender: Male
   Age: 23
-  NeedHunger: 66
+  NeedHunger: 57
   NeedSleep: 90
   Doing: Wandering around...
 --- !u!61 &1703528295

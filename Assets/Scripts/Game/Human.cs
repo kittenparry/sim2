@@ -36,7 +36,14 @@ public class Human : MonoBehaviour
     {
         string formattedText = System.String.Format("Hunger: {0}\nSleep: {1}\n{2}", NeedHunger, NeedSleep, Doing);
         Stats.text = formattedText;
-        rb.AddForce(movement * speed);
+        if (NeedHunger > 50)
+        {
+            rb.AddForce(movement * speed);
+        } else
+        {
+            Transform closest = GetClosestObject(fruitsPos);
+            rb.transform.position = Vector2.MoveTowards(rb.transform.position, closest.position, 3.0f * Time.deltaTime);
+        }
 
     }
 
@@ -53,9 +60,6 @@ public class Human : MonoBehaviour
         // else random movement
         if (NeedHunger <= 50)
         {
-            Transform closest = GetClosestObject(fruitsPos);
-            // transform.position = Vector3.MoveTowards(transform.position, closest.position, speed * Time.deltaTime);
-            transform.position = Vector2.Lerp(transform.position, closest.position, speed * Time.deltaTime);
             Doing = "Looking for food.";
         } else
         {
@@ -70,14 +74,13 @@ public class Human : MonoBehaviour
         // TODO: these need to be vector2
         Transform bestTarget = null;
         float closestDistanceSqr = Mathf.Infinity;
-        Vector3 currentPosition = transform.position;
+        Vector2 currentPosition = transform.position;
         foreach (Transform potentialTarget in obj)
         {
-            Vector3 directionToTarget = potentialTarget.position - currentPosition;
-            float dSqrToTarget = directionToTarget.sqrMagnitude;
-            if (dSqrToTarget < closestDistanceSqr)
+            float directionToTarget = Vector2.Distance(potentialTarget.position, currentPosition);
+            if (directionToTarget < closestDistanceSqr)
             {
-                closestDistanceSqr = dSqrToTarget;
+                closestDistanceSqr = directionToTarget;
                 bestTarget = potentialTarget;
             }
         }
